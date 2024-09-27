@@ -1,0 +1,71 @@
+{
+  "company": {
+    "name": "Tech Innovations Inc.",
+    "location": {
+      "address": {
+        "street": "1234 Tech Lane",
+        "city": "Silicon Valley",
+        "state": "CA",
+        "zip": "94043"
+      },
+      "coordinates": {
+        "latitude": 37.3861,
+        "longitude": -122.0838
+      }
+    },
+    "employees": [
+      {
+        "id": 1,
+        "name": "Alice Johnson",
+        "position": "Software Engineer",
+        "skills": ["JavaScript", "React", "Node.js"],
+        "projects": [
+          {
+            "name": "Web App Development",
+            "duration": "6 months",
+            "technologies": ["React", "Node.js"]
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Bob Smith",
+        "position": "Data Scientist",
+        "skills": ["Python", "Machine Learning", "SQL"],
+        "projects": [
+          {
+            "name": "Customer Insights",
+            "duration": "3 months",
+            "technologies": ["Python", "Pandas"]
+          }
+        ]
+      }
+    ],
+    "departments": {
+      "engineering": {
+        "head": "Alice Johnson",
+        "budget": 500000,
+        "teams": [
+          {
+            "name": "Frontend Team",
+            "members": 5
+          },
+          {
+            "name": "Backend Team",
+            "members": 4
+          }
+        ]
+      },
+      "data": {
+        "head": "Bob Smith",
+        "budget": 300000,
+        "teams": [
+          {
+            "name": "Analytics Team",
+            "members": 3
+          }
+        ]
+      }
+    }
+  }
+}

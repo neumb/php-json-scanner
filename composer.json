@@ -1,0 +1,10 @@
+{
+    "name": "neumb/php-json-scanner",
+	"license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Neumb\\JsonScanner\\": "src/"
+        }
+    },
+    "require": {}
+}

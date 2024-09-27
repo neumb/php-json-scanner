@@ -1,0 +1,25 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types = 1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Neumb\JsonScanner\Scanner;
+
+if ($argc < 2) {
+	fprintf(STDERR, "provide an input file\n");
+	exit(1);
+}
+
+$filepath = $argv[1];
+if (!is_file($filepath)) {
+	fprintf(STDERR, "no such file\n");
+	exit(1);
+}
+
+$data = file_get_contents($filepath);
+var_dump(
+	iterator_to_array(
+		Scanner::from($data)->scan()
+	)
+);
