@@ -1,0 +1,135 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+namespace Neumb\JsonScanner\functions {
+    require __DIR__ . '/../vendor/autoload.php';
+    use Neumb\JsonScanner\Scanner;
+    use Neumb\JsonScanner\TokenType as TT;
+    use Generator;
+
+    function consume(TT $type, Generator $iter): void
+    {
+        $tok = $iter->current();
+
+        if ($tok === null) {
+            throw new \Exception(sprintf("Unexpected end of input"));
+        }
+
+        if ($type !== $tok->t) {
+            throw new \Exception(sprintf("Expected token type to be %s, got %s", $type->name, $tok->name));
+        }
+
+        $iter->next();
+    }
+
+    function parse_array(Generator $iter): mixed
+    {
+        $array = [];
+
+        while ($iter->valid()) {
+            $token = $iter->current();
+            switch ($token->t) {
+                case TT::Comma: {		// skip a comma
+                    $iter->next();
+                } break;
+                case TT::RightBracket: { // end of an array
+                    $iter->next();
+                    break 2;
+                } break;
+                default: {
+                    $array[] = parse($iter);
+                } break;
+            }
+        }
+
+        return $array;
+    }
+
+    function parse_obj(Generator $iter): mixed
+    {
+        $obj = [];
+
+        while ($iter->valid()) {
+
+            $token = $iter->current();
+            switch ($token->t) {
+                case TT::String: {
+                    $iter->next();
+                    consume(TT::Colon, $iter);
+                    $obj[$token->lex] = parse($iter);
+                } break;
+                case TT::Comma: {		// skip a comma
+                    $iter->next();
+                } break;
+                case TT::RightBrace: {	// end of an object
+                    $iter->next();
+                    break 2;
+                } break;
+                default: {
+                    throw new \Exception(sprintf("parse_obj: got %s", $token->t->name));
+                } break;
+            }
+        }
+
+        return $obj;
+    }
+
+    function parse(Generator $iter): mixed
+    {
+        $token = $iter->current();
+        $iter->next();
+
+        switch ($token->t) {
+            case TT::LeftBracket: { // beginning of an object
+                return parse_array($iter);
+            } break;
+            case TT::LeftBrace: {   // beginning of an object
+                return parse_obj($iter);
+            } break;
+            case TT::String: {
+                return $token->lex;
+            } break;
+            case TT::Number: {
+                return (float)$token->lex;
+            } break;
+            case TT::True: {
+                return true;
+            } break;
+            case TT::False: {
+                return false;
+            } break;
+            case TT::Null: {
+                return null;
+            } break;
+            default: {
+                throw new \Exception(sprintf("Unexpected token: %s", $token->t->name));
+            } break;
+        }
+    };
+}
+
+namespace Neumb\JsonScanner {
+    require __DIR__ . '/../vendor/autoload.php';
+    use TokenType as TT;
+
+    if ($argc < 2) {
+        fprintf(STDERR, "provide an input file\n");
+        exit(1);
+    }
+
+    $filepath = $argv[1];
+    if (!is_file($filepath)) {
+        fprintf(STDERR, "no such file\n");
+        exit(1);
+    }
+
+    $data = file_get_contents($filepath);
+    $iterator = Scanner::from($data)->scan();
+    $firstToken = $iterator->current();
+
+    var_dump(
+        functions\parse($iterator)
+    );
+}

@@ -1,0 +1,54 @@
+[
+    {
+        "id": 1,
+        "name": "Alice",
+        "age": 30,
+        "email": "alice@example.com",
+        "hobbies": ["reading", "traveling", "swimming"],
+        "skills": [
+            {
+                "name": "JavaScript",
+                "level": "advanced"
+            },
+            {
+                "name": "Python",
+                "level": "intermediate"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Bob",
+        "age": 25,
+        "email": "bob@example.com",
+        "hobbies": ["gaming", "hiking"],
+        "skills": [
+            {
+                "name": "Java",
+                "level": "beginner"
+            },
+            {
+                "name": "C++",
+                "level": "intermediate"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Charlie",
+        "age": 35,
+        "email": "charlie@example.com",
+        "hobbies": ["cooking", "photography"],
+        "skills": [
+            {
+                "name": "Ruby",
+                "level": "advanced"
+            },
+            {
+                "name": "Go",
+                "level": "beginner"
+            }
+        ]
+    }
+]
+
