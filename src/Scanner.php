@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Neumb\JsonScanner;
 
 use Generator;
+use Neumb\JsonScanner\ScanException;
 
 final class Scanner
 {
@@ -89,7 +90,7 @@ final class Scanner
         $kw = "";
 
         if (! ctype_alnum($c = $this->peek())) {
-            throw new \Exception("Unexpected char: {$char} pos {$this->i}");
+            throw new ScanException("Unexpected char '{$char}' at pos {$this->i}");
         }
 
         while ($this->i < $this->len) {
@@ -101,7 +102,7 @@ final class Scanner
         }
 
         if (! isset(self::KEYWORDS[$kw])) {
-            throw new \Exception("Unexpected keyword: '{$kw}' pos {$this->i}");
+            throw new ScanException("Unexpected keyword '{$kw}' at pos {$this->i}");
         }
 
         return new Token(self::KEYWORDS[$kw], $kw, $pos);
@@ -157,7 +158,7 @@ final class Scanner
                     }
                 } break;
                 default: {
-                    throw new \Exception("Unreachable");
+                    throw new ScanException("Unreachable");
                 } break;
             }
         }
@@ -182,6 +183,7 @@ final class Scanner
             if ($c === "\\") {
                 switch ($c = $this->advance()) {
                     case "u": {
+                        $pos = $this->i;
                         $hex = join([
                             $this->advance(),
                             $this->advance(),
@@ -190,7 +192,7 @@ final class Scanner
                         ]);
 
                         if (!ctype_xdigit($hex)) {
-                            throw new \Exception("Invalid unicode sequence");
+                            throw new ScanException("Invalid unicode sequence at pos {$pos}");
                         }
 
                         $str .= mb_convert_encoding(PACK('H*', $hex), 'UTF-8', 'UTF-16BE');
@@ -216,7 +218,7 @@ final class Scanner
                         $str .= "\r";
                     } break;
                     default: {
-                        throw new \Exception("Invalid escape: pos {$this->i}");
+                        throw new ScanException("Invalid escape at pos {$this->i}");
                     } break;
                 }
             } else {
@@ -244,7 +246,7 @@ final class Scanner
     {
         $got = $this->peek();
         if ($got !== $expected) {
-            throw new \Exception("Expected '$expected', but got '$got'");
+            throw new ScanException("Expected '{$expected}', got '{$got}' at pos {$this->i}");
         }
 
         $this->advance();
@@ -256,6 +258,6 @@ final class Scanner
             return $this->chars[$this->i++];
         }
 
-        throw new \Exception('Unexpected end of input');
+        throw new ScanException("Unexpected end of input");
     }
 }
