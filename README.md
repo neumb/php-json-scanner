@@ -1,7 +1,8 @@
 ## JSON Scanner
-This library presents a JSON scanner for using in PHP projects, allowing to fine-tune the parsing process and achieve greater control over JSON structure interpretation and manipulation.
+A JSON scanner that provides granular control over JSON manipulation.
+This project is implemented for educational purposes.
 
-### Getting Started
+### Example
 ```php
 use Neumb\JsonScanner\Scanner;
 use Neumb\JsonScanner\Token;
